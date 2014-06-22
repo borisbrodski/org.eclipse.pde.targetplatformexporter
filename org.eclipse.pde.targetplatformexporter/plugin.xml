@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <wizard
+            category="org.eclipse.pde.ui.PluginDevelopment"
+            class="org.eclipse.pde.targetplatformexporter.wizards.TargetPlatformExporterWizard"
+            icon="icons/etool16/export_target.gif"
+            id="org.eclipse.pde.targetplatformexporter.wizard"
+            name="Target Platform Exporter">
+         <description>
+            Exports target platform for a set of arch/ws/os combinations
+         </description>
+      </wizard>
+   </extension>
+
+</plugin>
