@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Boris Brodski - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.pde.targetplatformexporter.wizards;
 
 import java.io.File;
@@ -7,6 +17,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.equinox.p2.internal.repository.mirroring.Mirroring;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -23,6 +34,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 
+/**
+ * 
+ *
+ * @author Boris Brodski
+ */
 @SuppressWarnings("restriction")
 public class TargetPlatformExporterWizard extends Wizard implements
 		IExportWizard {
@@ -84,6 +100,7 @@ public class TargetPlatformExporterWizard extends Wizard implements
 								if (monitor.isCanceled()) {
 									throw new InterruptedException();
 								}
+								// new Mirroring();
 								Job job = new ExportTargetJob(targetDefinition, new File(repoPath).toURI(), false);
 								job.schedule();
 								job.join();
