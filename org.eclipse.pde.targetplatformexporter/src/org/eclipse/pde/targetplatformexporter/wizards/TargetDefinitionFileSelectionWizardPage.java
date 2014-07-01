@@ -123,6 +123,7 @@ public class TargetDefinitionFileSelectionWizardPage extends WizardPage {
 	private TableViewer configurationTable;
 	private ArrayList<ExportConfiguration> input;
 	private Text repositoryLocationText;
+	private Button p2MirrorCheckbox;
 
 	protected TargetDefinitionFileSelectionWizardPage() {
 		super("Select targets");
@@ -171,21 +172,21 @@ public class TargetDefinitionFileSelectionWizardPage extends WizardPage {
 		input.add(ExportConfiguration.getDefault());
 		configurationTable.setInput(input);
 
-		Button addButton = new Button(composite, SWT.BORDER);
+		Button addButton = new Button(composite, SWT.PUSH);
 		addButton.setText("Add");
 		addButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
 		SWTUtil.setButtonDimensionHint(addButton);
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ExportConfiguration exportConfiguration = new ExportConfiguration();
+				ExportConfiguration exportConfiguration = ExportConfiguration.getDefault();
 				input.add(exportConfiguration);
 				configurationTable.add(exportConfiguration);
 				controlChanged();
 			}
 		});
 
-		Button removeButton = new Button(composite, SWT.BORDER);
+		Button removeButton = new Button(composite, SWT.PUSH);
 		removeButton.setText("Remove");
 		removeButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true));
 		SWTUtil.setButtonDimensionHint(removeButton);
@@ -195,9 +196,11 @@ public class TargetDefinitionFileSelectionWizardPage extends WizardPage {
 				ISelection selection = configurationTable.getSelection();
 				if (selection instanceof IStructuredSelection) {
 					Object element = ((IStructuredSelection) selection).getFirstElement();
-					input.remove(element);
-					configurationTable.remove(element);
-					controlChanged();
+					if (element != null) {
+						input.remove(element);
+						configurationTable.remove(element);
+						controlChanged();
+					}
 				}
 			}
 		});
@@ -225,6 +228,9 @@ public class TargetDefinitionFileSelectionWizardPage extends WizardPage {
 		});
 		SWTUtil.setButtonDimensionHint(repoBrowse);
 		
+		p2MirrorCheckbox = new Button(composite, SWT.CHECK);
+		p2MirrorCheckbox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 3, 0));
+		p2MirrorCheckbox.setText("Create p2 mirror repository instead of exporting plugins");
 
 		setControl(composite);
 		return composite;
@@ -386,6 +392,10 @@ public class TargetDefinitionFileSelectionWizardPage extends WizardPage {
 
 	public String getRepoPath() {
 		return repositoryLocationText.getText();
+	}
+
+	public boolean getP2Mirror() {
+		return p2MirrorCheckbox.getSelection();
 	}
 
 
