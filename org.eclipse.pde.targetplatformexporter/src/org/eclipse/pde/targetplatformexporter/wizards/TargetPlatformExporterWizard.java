@@ -49,7 +49,7 @@ import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
 
 /**
- * 
+ *
  *
  * @author Boris Brodski
  */
@@ -82,13 +82,13 @@ public class TargetPlatformExporterWizard extends Wizard implements
 		targetDefinitionFileSelectionWizardPage = new TargetDefinitionFileSelectionWizardPage();
 		addPage(targetDefinitionFileSelectionWizardPage);
 	}
-	
+
 	@Override
 	public boolean performFinish() {
 		final String repoPath = targetDefinitionFileSelectionWizardPage.getRepoPath();
 		final boolean p2Mirror= targetDefinitionFileSelectionWizardPage.getP2Mirror();
 		final AtomicReference<MultiStatus> multiStatusReference = new AtomicReference<>();
-		
+
 		final Set<URI> repoURIs = new HashSet<>();
 		final Set<IInstallableUnit> installableUnitSet = new HashSet<>();
 
@@ -107,7 +107,7 @@ public class TargetPlatformExporterWizard extends Wizard implements
 					SubMonitor subMonitor = SubMonitor.convert(monitor, 2 * combinations);
 					try {
 						subMonitor.setTaskName("Resolving and exporting target platform(s)");
-						
+
 						ITargetPlatformService service = (ITargetPlatformService) PDECore.getDefault().acquireService(ITargetPlatformService.class.getName());
 						for (IFile file : targetDefinitionFileSelectionWizardPage.getTargetFiles()) {
 							for (ExportConfiguration config : targetDefinitionFileSelectionWizardPage.getConfigurations()) {
@@ -118,10 +118,12 @@ public class TargetPlatformExporterWizard extends Wizard implements
 									targetDefinition.setArch(config.getArch());
 									targetDefinition.setWS(config.getWs());
 									targetDefinition.setOS(config.getOs());
-									
+
+									P2TargetUtils.deleteProfile(fileHandle);
+
 									// Resolve the target
 									targetDefinition.resolve(subMonitor.newChild(1));
-									
+
 									//TODO Check targetDefinition.getStatus()
 									if (monitor.isCanceled()) {
 										throw new InterruptedException();
@@ -149,7 +151,7 @@ public class TargetPlatformExporterWizard extends Wizard implements
 								}
 							}
 						}
-						
+
 					} finally {
 						monitor.done();
 					}
@@ -165,7 +167,7 @@ public class TargetPlatformExporterWizard extends Wizard implements
 				}
 			});
 
-			
+
 			if (multiStatusReference.get() != null) {
 				StringBuilder sb = new StringBuilder();
 				getMessage(multiStatusReference.get(), sb);
@@ -173,7 +175,7 @@ public class TargetPlatformExporterWizard extends Wizard implements
 					MessageDialog.openError(getShell(), "Error", sb.toString());
 					return false;
 				}
-				
+
 			}
 			MessageDialog.openInformation(getShell(), "Mirror p2 repository", "Operation successful");
 			return true;
@@ -197,7 +199,7 @@ public class TargetPlatformExporterWizard extends Wizard implements
 			for(IStatus ms : multiStatus.getChildren()) {
 				getMessage(ms, builder);
 			}
-			
+
 		}
 	}
 }
