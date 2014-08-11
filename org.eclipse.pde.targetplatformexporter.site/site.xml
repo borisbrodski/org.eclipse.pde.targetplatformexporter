@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.eclipse.pde.targetplatformexporter.feature_1.0.0.201407151806.jar" id="org.eclipse.pde.targetplatformexporter.feature" version="1.0.0.201407151806">
+   <feature url="features/org.eclipse.pde.targetplatformexporter.feature_1.0.0.201408111102.jar" id="org.eclipse.pde.targetplatformexporter.feature" version="1.0.0.201408111102">
       <category name="PDETools"/>
    </feature>
    <category-def name="PDETools" label="PDE Tools"/>
