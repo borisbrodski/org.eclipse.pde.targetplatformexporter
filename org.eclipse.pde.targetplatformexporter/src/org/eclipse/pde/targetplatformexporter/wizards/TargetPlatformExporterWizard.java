@@ -85,6 +85,8 @@ public class TargetPlatformExporterWizard extends Wizard implements
 
 	@Override
 	public boolean performFinish() {
+		targetDefinitionFileSelectionWizardPage.saveState();
+
 		final String repoPath = targetDefinitionFileSelectionWizardPage.getRepoPath();
 		final boolean p2Mirror= targetDefinitionFileSelectionWizardPage.getP2Mirror();
 		final AtomicReference<MultiStatus> multiStatusReference = new AtomicReference<>();
@@ -147,7 +149,7 @@ public class TargetPlatformExporterWizard extends Wizard implements
 									}
 								} catch (CoreException e) {
 									e.printStackTrace();
-									throw new InterruptedException("Error");
+									throw new InvocationTargetException(e, "Error exporting target platform(s): " + e);
 								}
 							}
 						}
@@ -180,10 +182,15 @@ public class TargetPlatformExporterWizard extends Wizard implements
 			MessageDialog.openInformation(getShell(), "Mirror p2 repository", "Operation successful");
 			return true;
 		} catch (InvocationTargetException e) {
+			e.printStackTrace();
 			if (e.getCause() instanceof MirrorException) {
 				MessageDialog.openError(getShell(), "Error", e.getCause().getMessage());
 			} else {
-				e.printStackTrace();
+				String message = e.getLocalizedMessage();
+				if (e.getCause() != null) {
+					message = e.getCause().getMessage();
+				}
+				MessageDialog.openError(getShell(), "Error", message);
 			}
 		} catch (InterruptedException e) {
 		}
