@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CellLabelProvider;
@@ -119,6 +120,10 @@ public class TargetDefinitionFileSelectionWizardPage extends WizardPage {
 		abstract void setStringValue(ExportConfiguration configuration, String value);
 		abstract String getStringValue(ExportConfiguration configuration);
 	}
+
+	private static final String SETTINGS_P2_MIRROR = "p2.mirror";
+	private static final String SETTINGS_REPO_LOCATION = "repo.location";
+	private static final String SETTINGS_CONFIG_TABLE = "config.table";
 
 	private Text targetDefinitionsText;
 	private Object[] targetSelection;
@@ -234,9 +239,47 @@ public class TargetDefinitionFileSelectionWizardPage extends WizardPage {
 		p2MirrorCheckbox = new Button(composite, SWT.CHECK);
 		p2MirrorCheckbox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 3, 0));
 		p2MirrorCheckbox.setText("Create p2 mirror repository instead of exporting plugins");
+		p2MirrorCheckbox.setSelection(true);
 
 		setControl(composite);
+		
 		return composite;
+	}
+
+	private void loadState() {
+		String selectionBasedSection = getTargetFilesAsString();
+		IDialogSettings section = getWizard().getDialogSettings().getSection(selectionBasedSection);
+		if (section != null) {
+			p2MirrorCheckbox.setSelection(section.getBoolean(SETTINGS_P2_MIRROR));
+			repositoryLocationText.setText(section.get(SETTINGS_REPO_LOCATION));
+			String[] parts = section.getArray(SETTINGS_CONFIG_TABLE);
+			input.clear();
+			for (String string : parts) {
+				ExportConfiguration configuration = ExportConfiguration.fromString(string);
+				if (configuration != null) {
+					input.add(configuration);
+				}
+			}
+			configurationTable.refresh();
+			controlChanged();
+		}
+	}
+	
+	public void saveState() {
+		String selectionBasedSection = getTargetFilesAsString();
+		IDialogSettings section = getWizard().getDialogSettings().getSection(selectionBasedSection);
+		if (section == null) {
+			section = getWizard().getDialogSettings().addNewSection(selectionBasedSection);
+		}
+		
+		section.put(SETTINGS_REPO_LOCATION, repositoryLocationText.getText());
+		section.put(SETTINGS_P2_MIRROR, p2MirrorCheckbox.getSelection());
+		
+		String [] lines = new String[input.size()];
+		for (int i = 0; i < lines.length; i++) {
+			lines[i] = input.get(i).toString();
+		}
+		section.put(SETTINGS_CONFIG_TABLE, lines);
 	}
 
 	private void createColumns() {
@@ -395,6 +438,7 @@ public class TargetDefinitionFileSelectionWizardPage extends WizardPage {
 		} else {
 			targetDefinitionsText.setText("" + results.length + " files selected");
 		}
+		loadState();
 		controlChanged();
 	}
 
@@ -404,9 +448,17 @@ public class TargetDefinitionFileSelectionWizardPage extends WizardPage {
 			result.add((IFile)file);
 		}
 		return result;
-		
 	}
 
+	private String getTargetFilesAsString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		for (IFile file : getTargetFiles()) {
+			stringBuilder.append(file.getFullPath().toPortableString());
+			stringBuilder.append(File.pathSeparatorChar);
+		}
+		return stringBuilder.toString();
+	}
+	
 	public List<ExportConfiguration> getConfigurations() {
 		List<ExportConfiguration> result = new ArrayList<>();
 		for (ExportConfiguration exportConfiguration : input) {

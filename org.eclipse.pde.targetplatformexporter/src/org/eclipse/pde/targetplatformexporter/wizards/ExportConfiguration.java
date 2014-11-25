@@ -24,6 +24,23 @@ public class ExportConfiguration {
 	public ExportConfiguration() {
 	}
 	
+	/**
+	 * Reverse {@link #toString()} method
+	 * @param string string representation
+	 * @return <code>null</code> - invalid format
+	 */
+	public static ExportConfiguration fromString(String string) {
+		String[] parts = string.split("/");
+		if (parts.length != 3) {
+			return null;
+		}
+		ExportConfiguration exportConfiguration = new ExportConfiguration();
+		exportConfiguration.os = parts[0];
+		exportConfiguration.ws = parts[1];
+		exportConfiguration.arch = parts[2];
+		return exportConfiguration;
+	}
+	
 	public String getOs() {
 		return os;
 	}
@@ -49,5 +66,10 @@ public class ExportConfiguration {
 		exportConfiguration.setOs(Platform.getOS());
 		exportConfiguration.setWs(Platform.getWS());
 		return exportConfiguration;
+	}
+	
+	@Override
+	public String toString() {
+		return os + "/" + ws + "/" + arch;
 	}
 }
