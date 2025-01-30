@@ -110,7 +110,7 @@ public class TargetPlatformExporterWizard extends Wizard implements
 					try {
 						subMonitor.setTaskName("Resolving and exporting target platform(s)");
 
-						ITargetPlatformService service = (ITargetPlatformService) PDECore.getDefault().acquireService(ITargetPlatformService.class.getName());
+						ITargetPlatformService service = (ITargetPlatformService) PDECore.getDefault().acquireService(ITargetPlatformService.class);
 						for (IFile file : targetDefinitionFileSelectionWizardPage.getTargetFiles()) {
 							for (ExportConfiguration config : targetDefinitionFileSelectionWizardPage.getConfigurations()) {
 								try {

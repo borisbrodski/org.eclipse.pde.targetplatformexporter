@@ -226,7 +226,7 @@ public class P2MirrorTool {
 		Mirroring mirror = new Mirroring(compositeArtifactRepository, destArtifactRepository, false);
 		mirror.setValidate(false);
 		mirror.setTransport((Transport) agent.getService(Transport.SERVICE_NAME));
-		mirror.setIncludePacked(false);
+		mirror.setMirrorProperties(true);
 
 		// If IUs have been specified then only they should be mirrored, otherwise mirror everything.
 		if (keys.size() > 0)

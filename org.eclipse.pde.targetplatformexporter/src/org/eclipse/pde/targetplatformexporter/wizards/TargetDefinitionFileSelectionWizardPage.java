@@ -37,7 +37,6 @@ import org.eclipse.pde.internal.ui.editor.site.PortabilitySection;
 import org.eclipse.pde.internal.ui.util.FileExtensionFilter;
 import org.eclipse.pde.internal.ui.util.FileValidator;
 import org.eclipse.pde.internal.ui.util.SWTUtil;
-import org.eclipse.pde.targetplatformexporter.Activator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
@@ -54,6 +53,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
@@ -415,7 +415,7 @@ public class TargetDefinitionFileSelectionWizardPage extends WizardPage {
 
 	private void initTargetDefinitionsFromSelection() {
 		List<IFile> result = new ArrayList<IFile>();
-		IWorkbenchWindow activeWorkbenchWindow = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (activeWorkbenchWindow != null) {
 			ISelection selection = activeWorkbenchWindow.getSelectionService().getSelection();
 			if (selection instanceof IStructuredSelection) {
