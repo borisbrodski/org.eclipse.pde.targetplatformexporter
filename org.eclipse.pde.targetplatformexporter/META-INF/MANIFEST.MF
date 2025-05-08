@@ -17,5 +17,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.equinox.p2.metadata.repository,
  org.eclipse.equinox.p2.artifact.repository,
  org.eclipse.equinox.frameworkadmin
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-ActivationPolicy: lazy
